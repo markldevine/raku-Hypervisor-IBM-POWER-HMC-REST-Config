@@ -1,31 +1,31 @@
 {
-  "auth":           "github:markldevine",
-  "authors":        [ "Mark Devine <mark@markdevine.com>" ],
-  "depends":        [
-    "LibXML",
-    "Terminal::ANSIColor",
-    "URI",
-  ],
-  "description":    "IBM POWER HMC REST API - Config",
-  "license":        "Artistic-2.0",
-  "meta-version":   0,
-  "name":           "Hypervisor::IBM::POWER::HMC::REST::Config",
-  "perl":           "6.*",
-  "provides":       {
-    "Hypervisor::IBM::POWER::HMC::REST::Config": "lib/Hypervisor/IBM/POWER/HMC/REST/Config.rakumod",
-    "Hypervisor::IBM::POWER::HMC::REST::Config::Analysis": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Analysis.rakumod",
-    "Hypervisor::IBM::POWER::HMC::REST::Config::Analyze": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Analyze.rakumod",
-    "Hypervisor::IBM::POWER::HMC::REST::Config::Diags": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Diags.rakumod",
-    "Hypervisor::IBM::POWER::HMC::REST::Config::Dump": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Dump.rakumod",
-    "Hypervisor::IBM::POWER::HMC::REST::Config::Optimization": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Optimization.rakumod",
-    "Hypervisor::IBM::POWER::HMC::REST::Config::Optimize": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Optimize.rakumod",
-    "Hypervisor::IBM::POWER::HMC::REST::Config::Options": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Options.rakumod"
-  },
-  "resources":      [],
-  "source-url":     "https://github.com/markldevine/raku-Hypervisor-IBM-POWER-HMC-REST-Config.git",
-  "tags":           [
-    "HMC",
-    "REST"
-  ],
-  "version":        "0.0.1"
+    "auth":         "github:markldevine",
+    "authors":      [ "Mark Devine <mark@markdevine.com>" ],
+    "depends":      [
+        "LibXML",
+        "Terminal::ANSIColor",
+        "URI"
+    ],
+    "description":  "IBM POWER HMC REST API - Config",
+    "license":      "Artistic-2.0",
+    "meta-version": 0,
+    "name":         "Hypervisor::IBM::POWER::HMC::REST::Config",
+    "perl":         "6.*",
+    "provides":     {
+        "Hypervisor::IBM::POWER::HMC::REST::Config": "lib/Hypervisor/IBM/POWER/HMC/REST/Config.rakumod",
+        "Hypervisor::IBM::POWER::HMC::REST::Config::Analysis": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Analysis.rakumod",
+        "Hypervisor::IBM::POWER::HMC::REST::Config::Analyze": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Analyze.rakumod",
+        "Hypervisor::IBM::POWER::HMC::REST::Config::Diags": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Diags.rakumod",
+        "Hypervisor::IBM::POWER::HMC::REST::Config::Dump": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Dump.rakumod",
+        "Hypervisor::IBM::POWER::HMC::REST::Config::Optimization": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Optimization.rakumod",
+        "Hypervisor::IBM::POWER::HMC::REST::Config::Optimize": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Optimize.rakumod",
+        "Hypervisor::IBM::POWER::HMC::REST::Config::Options": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Options.rakumod"
+    },
+    "resources":    [],
+    "source-url":   "https://github.com/markldevine/raku-Hypervisor-IBM-POWER-HMC-REST-Config.git",
+    "tags":         [
+        "HMC",
+        "REST"
+    ],
+    "version":      "0.0.1"
 }
