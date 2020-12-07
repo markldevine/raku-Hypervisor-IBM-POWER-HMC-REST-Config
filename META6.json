@@ -8,7 +8,7 @@
         "MessageStream",
         "POSIX::getaddrinfo",
         "Term::Choose",
-        "Terminal::ANSIColor"
+        "Terminal::ANSIColor",
         "URI::Escape"
     ],
     "description":  "IBM POWER HMC REST API - Config",
