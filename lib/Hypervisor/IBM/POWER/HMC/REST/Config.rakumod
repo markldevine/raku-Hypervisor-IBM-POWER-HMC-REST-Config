@@ -3,10 +3,10 @@ need    Hypervisor::IBM::POWER::HMC::REST::Config::Analysis;
 need    Hypervisor::IBM::POWER::HMC::REST::Config::Optimization;
 need    Hypervisor::IBM::POWER::HMC::REST::Config::Options;
 need    Hypervisor::IBM::POWER::HMC::REST::Logon::X-API-Session;
-need    Hypervisor::IBM::POWER::HMC::REST::Messaging::DUMP;
-need    Hypervisor::IBM::POWER::HMC::REST::Messaging::DIAG;
-need    Hypervisor::IBM::POWER::HMC::REST::Messaging::INFO;
-need    Hypervisor::IBM::POWER::HMC::REST::Messaging::NOTE;
+need    Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::DUMP;
+need    Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::DIAG;
+need    Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::INFO;
+need    Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::NOTE;
 use     JSON::Fast;
 use     POSIX::getaddrinfo :Get-Addr-Info-IPV4-STREAM-IPAddrs;
 use     Term::Choose :choose, :choose-multi;
@@ -15,37 +15,37 @@ unit    class Hypervisor::IBM::POWER::HMC::REST::Config:api<1>:auth<Mark Devine 
             does Hypervisor::IBM::POWER::HMC::REST::Config::Analysis
             does Hypervisor::IBM::POWER::HMC::REST::Config::Optimization;
 
-has     Hypervisor::IBM::POWER::HMC::REST::Config::Options      $.options is required;
-has     Str                                                     $!root-directory;
-has     Str                                                     $!cache-directory;
-has     Str                                                     $!consumers-directory;
-has     Str                                                     $!consumer-active-directory;
-has     Str                                                     $!consumer-missing-directory;
-has     Str                                                     $!credentials-directory;
-#as     Str                                                     $!analysis-path;
-has     Str                                                     $!diagnostics-path;
-has     Str                                                     $!hmcs-path;
-has     Str                                                     $!formats-path;
-has     Str                                                     $!maintenance-path;
-has     Str                                                     $!messaging-path;
-has     Str                                                     $!optimizations-path;
-has     Str                                                     $.pid-path;
-has     Int                                                     %!diagnostics;
-has                                                             %!formats;
-has                                                             %!messaging;
-has     Hash                                                    %!hmcs;
-has                                                             %!optimizations;
-has     Str                                                     $!hmc-candidate;
-has     Str                                                     $!user-id-candidate;
-has     Bool                                                    $!cache;
-has     Str                                                     $!hmc;
-has     Str                                                     $!user-id;
-has     Bool                                                    $.optimize;
-has     Hypervisor::IBM::POWER::HMC::REST::Messaging::DUMP      $.dump;
-has     Hypervisor::IBM::POWER::HMC::REST::Messaging::DIAG      $.diag;
-has     Hypervisor::IBM::POWER::HMC::REST::Messaging::INFO      $.info;
-has     Hypervisor::IBM::POWER::HMC::REST::Messaging::NOTE      $.note;
-has     Hypervisor::IBM::POWER::HMC::REST::Logon::X-API-Session $.session-manager;
+has     Hypervisor::IBM::POWER::HMC::REST::Config::Options          $.options is required;
+has     Str                                                         $!root-directory;
+has     Str                                                         $!cache-directory;
+has     Str                                                         $!consumers-directory;
+has     Str                                                         $!consumer-active-directory;
+has     Str                                                         $!consumer-missing-directory;
+has     Str                                                         $!credentials-directory;
+#as     Str                                                         $!analysis-path;
+has     Str                                                         $!diagnostics-path;
+has     Str                                                         $!hmcs-path;
+has     Str                                                         $!formats-path;
+has     Str                                                         $!maintenance-path;
+has     Str                                                         $!messaging-path;
+has     Str                                                         $!optimizations-path;
+has     Str                                                         $.pid-path;
+has     Int                                                         %!diagnostics;
+has                                                                 %!formats;
+has                                                                 %!messaging;
+has     Hash                                                        %!hmcs;
+has                                                                 %!optimizations;
+has     Str                                                         $!hmc-candidate;
+has     Str                                                         $!user-id-candidate;
+has     Bool                                                        $!cache;
+has     Str                                                         $!hmc;
+has     Str                                                         $!user-id;
+has     Bool                                                        $.optimize;
+has     Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::DUMP  $.dump;
+has     Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::DIAG  $.diag;
+has     Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::INFO  $.info;
+has     Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::NOTE  $.note;
+has     Hypervisor::IBM::POWER::HMC::REST::Logon::X-API-Session     $.session-manager;
 
 constant SUBDIRNAME     = '.hiph';
 constant DIAGNOSTICS    = set < 
@@ -185,13 +185,13 @@ method !resolve-messaging () {
 
 #%%%    Use $!messaging-path & %!messaging for persistence...  (NYI)
 
-    $!dump   = Hypervisor::IBM::POWER::HMC::REST::Messaging::DUMP.new(:$!options);
+    $!dump   = Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::DUMP.new(:$!options);
     $!dump.subscribe(:destination<DUMP-TTY>);
-    $!diag   = Hypervisor::IBM::POWER::HMC::REST::Messaging::DIAG.new(:$!options);
+    $!diag   = Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::DIAG.new(:$!options);
     $!diag.subscribe(:destination<DIAG-TTY>);
-    $!info   = Hypervisor::IBM::POWER::HMC::REST::Messaging::INFO.new(:$!options);
+    $!info   = Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::INFO.new(:$!options);
     $!info.subscribe(:destination<INFO-TTY>);
-    $!note   = Hypervisor::IBM::POWER::HMC::REST::Messaging::NOTE.new(:$!options);
+    $!note   = Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::NOTE.new(:$!options);
     $!note.subscribe(:destination<NOTE-TTY>);
 }
 

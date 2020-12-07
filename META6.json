@@ -4,10 +4,11 @@
     "depends":      [
         "File::Directory::Tree",
         "Hypervisor::IBM::POWER::HMC::REST::Logon",
-        "Hypervisor::IBM::POWER::HMC::REST::Messaging",
         "JSON::Fast;",
+        "MessageStream",
         "POSIX::getaddrinfo",
         "Term::Choose",
+        "Terminal::ANSIColor"
         "URI::Escape"
     ],
     "description":  "IBM POWER HMC REST API - Config",
@@ -23,7 +24,11 @@
         "Hypervisor::IBM::POWER::HMC::REST::Config::Dump": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Dump.rakumod",
         "Hypervisor::IBM::POWER::HMC::REST::Config::Optimization": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Optimization.rakumod",
         "Hypervisor::IBM::POWER::HMC::REST::Config::Optimize": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Optimize.rakumod",
-        "Hypervisor::IBM::POWER::HMC::REST::Config::Options": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Options.rakumod"
+        "Hypervisor::IBM::POWER::HMC::REST::Config::Options": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Options.rakumod",
+        "Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::DIAG": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Messaging/DIAG.rakumod",
+        "Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::DUMP": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Messaging/DUMP.rakumod",
+        "Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::INFO": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Messaging/INFO.rakumod",
+        "Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::NOTE": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Messaging/NOTE.rakumod"
     },
     "resources":    [],
     "source-url":   "https://github.com/markldevine/raku-Hypervisor-IBM-POWER-HMC-REST-Config.git",
