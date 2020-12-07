@@ -4,7 +4,7 @@
     "depends":      [
         "File::Directory::Tree",
         "Hypervisor::IBM::POWER::HMC::REST::Logon",
-        "JSON::Fast;",
+        "JSON::Fast",
         "MessageStream",
         "POSIX::getaddrinfo",
         "Term::Choose",
