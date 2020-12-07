@@ -2,9 +2,13 @@
     "auth":         "github:markldevine",
     "authors":      [ "Mark Devine <mark@markdevine.com>" ],
     "depends":      [
-        "LibXML",
-        "Terminal::ANSIColor",
-        "URI"
+        "File::Directory::Tree",
+        "Hypervisor::IBM::POWER::HMC::REST::Logon",
+        "Hypervisor::IBM::POWER::HMC::REST::Messaging",
+        "JSON::Fast;",
+        "POSIX::getaddrinfo",
+        "Term::Choose",
+        "URI::Escape"
     ],
     "description":  "IBM POWER HMC REST API - Config",
     "license":      "Artistic-2.0",
