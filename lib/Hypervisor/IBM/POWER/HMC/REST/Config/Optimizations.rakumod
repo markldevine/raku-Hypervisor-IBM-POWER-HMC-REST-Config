@@ -1,8 +1,6 @@
 use             JSON::Fast;
 unit    module  Hypervisor::IBM::POWER::HMC::REST::Config::Optimizations:ver<0.0.1>:api<1>:auth<Mark Devine (mark@markdevine.com)>;
 
-has     Bool    $.auto-load = True;
-
 our             %OPTIMIZATION;
                 %OPTIMIZATION<ATTRIBUTE><get_value>    = {};
 our             $OPTIMIZATION-PATH                     = $*HOME ~ '/dev/' ~ 'OPTIMIZATIONS.json';
