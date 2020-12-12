@@ -36,7 +36,7 @@ multi trait_mod:<is> (Attribute:D \a, :$conditional-initialization-attribute!) {
     a.package.^add_method($mname, &method);
 }
 
-our sub conditional-initialization-attribute-active (Str:D $package!, Str:D $name!) {
+sub conditional-initialization-attribute-active (Str:D $package!, Str:D $name!) is export {
 #   (1) no optimization -- return fastest
     return True unless $OPTIMIZATIONS +& OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
 #   (2) been profiled, return False as soon as possible

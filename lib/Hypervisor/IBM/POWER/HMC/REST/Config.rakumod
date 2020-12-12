@@ -1,8 +1,8 @@
 use     File::Directory::Tree;
 need    Hypervisor::IBM::POWER::HMC::REST::Config::Analysis;
-need    Hypervisor::IBM::POWER::HMC::REST::Config::END;
+use     Hypervisor::IBM::POWER::HMC::REST::Config::END;
 need    Hypervisor::IBM::POWER::HMC::REST::Config::Optimization;
-need    Hypervisor::IBM::POWER::HMC::REST::Config::Optimizations;
+use     Hypervisor::IBM::POWER::HMC::REST::Config::Optimizations;
 need    Hypervisor::IBM::POWER::HMC::REST::Config::Options;
 need    Hypervisor::IBM::POWER::HMC::REST::Logon::X-API-Session;
 need    Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::DUMP;
