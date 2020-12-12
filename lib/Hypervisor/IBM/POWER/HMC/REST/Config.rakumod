@@ -386,7 +386,7 @@ method !resolve-optimizations () {
         %!optimizations = from-json(slurp($!optimizations-path));
     }
 #   %*ENV<HIPH_OPTIMIZE>    = 0;                                                # optimizations may only be activated from within (--optimize)
-#   maitain %profile<$PROGRAM-NAME.IO.absolute><m>
+#   maintain %profile<$PROGRAM-NAME.IO.absolute><m>
 #   if %profile<$PROGRAM-NAME.IO.absolute><m> < $PROGRAM-NAME.IO.modified, drop profile map & carp
 #   if $PROGRAM-NAME.IO.modified > %!profile.modified, drop profile map and carp
 }
