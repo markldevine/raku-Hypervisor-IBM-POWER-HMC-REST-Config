@@ -7,6 +7,10 @@ method analyze {
     my %local-attrs                 = self.^attributes(:local).map({ $_.name => $_.package });
     my $max-local-attr-name-chars   = 0;
     for self.^attributes -> $attr {
+
+#%%%    next if PROFILED for ATTRIBUTE-get_value & not in the map...
+#%%%    further, if PROFILED & never calling dump, then avoid all analysis whatsoever...!
+
         next                        if %local-attrs{$attr.name}:exists && !(%local-attrs{$attr.name} === $attr.package);
         next                        unless $attr.has_accessor;
         next                        unless $attr.type ~~ Str;

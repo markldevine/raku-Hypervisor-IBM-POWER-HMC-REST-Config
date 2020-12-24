@@ -1,5 +1,5 @@
 use             JSON::Fast;
-unit    module  Hypervisor::IBM::POWER::HMC::REST::Config::Optimizations:ver<0.0.1>:api<1>:auth<Mark Devine (mark@markdevine.com)>;
+unit    module  Hypervisor::IBM::POWER::HMC::REST::Config::Optimizations:ver<0.0.1>:api<1>:auth<Mark Devine (mark@markdevine.com)> is export;
 
 our             %OPTIMIZATION;
                 %OPTIMIZATION<ATTRIBUTE><get_value>    = {};
@@ -44,27 +44,3 @@ sub conditional-initialization-attribute-active (Str:D $package!, Str:D $name!) 
 }
 
 =finish
-
-    if $optimize {
-        $OPTIMIZATION-PATH.IO.unlink if $OPTIMIZATION-PATH.IO.e;
-        $OPTIMIZATIONS +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
-        $OPTIMIZATIONS +|= OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
-    }
-    else {
-        if $OPTIMIZATION-PATH.IO.e {
-            %OPTIMIZATION = from-json(slurp($OPTIMIZATION-PATH));
-            if %OPTIMIZATION<ATTRIBUTE><get_value>.elems {
-                $OPTIMIZATIONS +|= OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
-                $OPTIMIZATIONS +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
-            }
-            else {
-                $OPTIMIZATION-PATH.IO.unlink;
-                $OPTIMIZATIONS +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
-                $OPTIMIZATIONS +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
-            }
-        }
-        else {
-            $OPTIMIZATIONS +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
-            $OPTIMIZATIONS +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
-        }
-    }
