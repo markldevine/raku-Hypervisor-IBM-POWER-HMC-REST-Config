@@ -55,7 +55,7 @@ method attribute-get_value-set-as-accessed (Str:D :$package, Str:D :$attribute) 
 }
 
 method attribute-get_value-is-accessed (Str:D :$package, Str:D :$attribute) {
-    return True if %!map<ATTRIBUTE><get_value>{$package}{$attribute}:exists
+    return True if %!map<ATTRIBUTE><get_value>{$package}{$attribute}:exists;
     return False;
 }
 
