@@ -10,16 +10,14 @@ multi trait_mod:<is> (Attribute:D \a, :$conditional-initialization-attribute!) {
             a.set_value(self, $s);
             return $s;
         }
-        return a.get_value(self) unless $OPTIMIZATIONS & (OPTIMIZE-ATTRIBUTE-get_value-PROFILING +| OPTIMIZE-ATTRIBUTE-get_value-PROFILED);
-        if $OPTIMIZATIONS +& OPTIMIZE-ATTRIBUTE-get_value-PROFILED {
-            unless %OPTIMIZATION<ATTRIBUTE><get_value>{self.^name}{a.name.substr(2)}:exists {
-                $OPTIMIZATION-PATH.IO.unlink;
-                die 'Optimization map is stale (deleted...) -- restart and optionally re-optimize. Exiting...';
+        if self.config.optimizations.attribute-get_value-profiled {
+            unless self.config.optimizations.attribute-get_value-is-accessed(:package(self.^name), :attribute(a.name.substr(2))) {
+                self.config.optimizations.flush;
+                die 'The optimization map is stale and has been deleted. Restart and optionally re-optimize. Exiting...';
             }
         }
-        elsif $OPTIMIZATIONS +& OPTIMIZE-ATTRIBUTE-get_value-PROFILING {
-            %OPTIMIZATION<ATTRIBUTE><get_value>{self.^name}{a.name.substr(2)} = 1;
-            $OPTIMIZATIONS +|= OPTIMIZE-ATTRIBUTE-get_value-UPDATED;
+        elsif self.config.optimizations.attribute-get_value-profiling {
+            self.config.optimizations.attribute-get_value-set-as-accessed(:package(self.^name), :attribute(a.name.substr(2)))
         }
         return a.get_value(self);
     }
@@ -28,8 +26,8 @@ multi trait_mod:<is> (Attribute:D \a, :$conditional-initialization-attribute!) {
 }
 
 method conditional-initialization-attribute-active (Str:D $package!, Str:D $name!) is export {
-    return True unless $OPTIMIZATIONS +& OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
-    return False unless %OPTIMIZATION<ATTRIBUTE><get_value>{$package}{$name}:exists;
+    return True unless self.config.optimizations.attribute-get_value-profiled
+    return False unless self.config.optimizations.attribute-get_value-is-accessed(:$package, :$attribute);
     return True;
 }
 

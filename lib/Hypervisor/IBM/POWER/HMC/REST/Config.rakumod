@@ -1,7 +1,5 @@
 use     File::Directory::Tree;
 need    Hypervisor::IBM::POWER::HMC::REST::Config::Analysis;
-use     Hypervisor::IBM::POWER::HMC::REST::Config::END;
-#%%%need    Hypervisor::IBM::POWER::HMC::REST::Config::Optimization;
 need    Hypervisor::IBM::POWER::HMC::REST::Config::Optimizations;
 need    Hypervisor::IBM::POWER::HMC::REST::Config::Options;
 need    Hypervisor::IBM::POWER::HMC::REST::Logon::X-API-Session;
@@ -15,7 +13,6 @@ use     Term::Choose :choose, :choose-multi;
 use     URI::Escape;
 unit    class Hypervisor::IBM::POWER::HMC::REST::Config:api<1>:auth<Mark Devine (mark@markdevine.com)>
             does Hypervisor::IBM::POWER::HMC::REST::Config::Analysis;
-#%%%        does Hypervisor::IBM::POWER::HMC::REST::Config::Optimization;
 
 has     Bool                                                        $!cache;
 has     Str                                                         $!cache-directory;
@@ -436,6 +433,7 @@ ENDOFRECOMMENDATION
     if $private-dir {
         if $!cache-directory.IO.mode != 0o700 {
             die 'chmod 0o700 ' ~ $!cache-directory ~ ' failed!' unless $!cache-directory.IO.chmod('0o700');
+        }
     }
     else {
         if $!cache-directory.IO.mode != 0o2770 {

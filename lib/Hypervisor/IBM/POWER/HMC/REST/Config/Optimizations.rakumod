@@ -23,7 +23,7 @@ submethod TWEAK {
         $!active +|= OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
     }
     else {
-        if self!retrieve-optimizations {
+        if self!retrieve {
 #   Optimization: *
 #   ...
 #   Optimization: Attribute get_value actual usage
@@ -49,6 +49,16 @@ submethod TWEAK {
     }
 }
 
+method attribute-get_value-set-as-accessed (Str:D :$package, Str:D :$attribute) {
+    %!map<ATTRIBUTE><get_value>{$package}{$attribute} = 1;
+    $!active +|= OPTIMIZE-ATTRIBUTE-get_value-UPDATED;
+}
+
+method attribute-get_value-is-accessed (Str:D :$package, Str:D :$attribute) {
+    return True if %!map<ATTRIBUTE><get_value>{$package}{$attribute}:exists
+    return False;
+}
+
 method attribute-get_value-profiled () {
     return True if $!active +& OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
     return False;
@@ -59,7 +69,7 @@ method attribute-get_value-profiling () {
     return False;
 }
 
-method !retrieve-optimizations () {
+method !retrieve () {
     if $!optimizations-path.IO.f && ! $!optimizations-path.IO.z {
         given $!optimizations-path.IO.open {
             .lock: :shared;
@@ -70,7 +80,7 @@ method !retrieve-optimizations () {
     %!map.elems;
 }
 
-method stash-optimizations () {
+method stash () {
     if $!optimize && %!map.elems {
         given $!optimizations-path.IO.open(:w) {
             .lock;
@@ -78,6 +88,10 @@ method stash-optimizations () {
             .close;
         }
     }
+}
+
+method flush () {
+    $!optimizations-path.IO.unlink;
 }
 
 =finish
