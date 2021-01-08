@@ -94,4 +94,8 @@ method flush () {
     $!optimizations-path.IO.unlink;
 }
 
+method init-load () {
+    True;
+}
+
 =finish

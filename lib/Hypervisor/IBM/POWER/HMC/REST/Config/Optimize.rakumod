@@ -1,7 +1,7 @@
 use         JSON::Fast;
 unit        role Hypervisor::IBM::POWER::HMC::REST::Config::Optimize:api<1>:auth<Mark Devine (mark@markdevine.com)>;
 
-has Bool    $.auto-load = True;
+#has Bool    $.auto-load = True;
 
 multi trait_mod:<is> (Attribute:D \a, :$conditional-initialization-attribute!) {
     my $mname   = a.name.substr(2);
@@ -32,16 +32,16 @@ method conditional-initialization-attribute-active (Str:D $package!, Str:D $name
 }
 
 
-method optimization-init-load {
-    self.diag.post: self.^name ~ '::' ~ &?ROUTINE.name if %*ENV<HIPH_METHOD>;
-#
-#   decide if .init() should proceed to .load()
-#
-    return self.auto-load;
-}
+#method optimization-init-load {
+#    self.diag.post: self.^name ~ '::' ~ &?ROUTINE.name if %*ENV<HIPH_METHOD>;
+##
+##   decide if .init() should proceed to .load()
+##
+#    return self.auto-load;
+#}
 
-method set-init-load (Bool:D $auto-load) {
-    $!auto-load = $auto-load;
-}
+#method set-init-load (Bool:D $auto-load) {
+#    $!auto-load = $auto-load;
+#}
 
 =finish
