@@ -1,6 +1,6 @@
 unit        role Hypervisor::IBM::POWER::HMC::REST::Config::Optimize:api<1>:auth<Mark Devine (mark@markdevine.com)>;
 
-multi method trait_mod:<is> (Attribute:D \a, :$conditional-initialization-attribute!) {
+multi trait_mod:<is> (Attribute:D \a, :$conditional-initialization-attribute!) {
     my $mname   = a.name.substr(2);
     my &method  = my method (Str $s?) {
         if $s {
