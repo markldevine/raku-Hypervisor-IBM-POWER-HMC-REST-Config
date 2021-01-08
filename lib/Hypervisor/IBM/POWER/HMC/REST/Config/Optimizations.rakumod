@@ -1,46 +1,83 @@
-use             JSON::Fast;
-unit    module  Hypervisor::IBM::POWER::HMC::REST::Config::Optimizations:ver<0.0.1>:api<1>:auth<Mark Devine (mark@markdevine.com)> is export;
+use         JSON::Fast;
+unit class  Hypervisor::IBM::POWER::HMC::REST::Config::Optimizations:ver<0.0.1>:api<1>:auth<Mark Devine (mark@markdevine.com)>;
 
-our             %OPTIMIZATION;
-                %OPTIMIZATION<ATTRIBUTE><get_value>    = {};
-our             $OPTIMIZATION-PATH                     = $*HOME ~ '/dev/' ~ 'OPTIMIZATIONS.json';
-our             $OPTIMIZATIONS                         = 0;
+has         $.active;
+has         %.map;
+has         $.optimize                              = False;
+has         $.optimizations-path is required;
 
-constant        OPTIMIZE-ATTRIBUTE-get_value-UPDATED   = 0o0001;
-constant        OPTIMIZE-ATTRIBUTE-get_value-PROFILING = 0o0002;
-constant        OPTIMIZE-ATTRIBUTE-get_value-PROFILED  = 0o0004;
+constant    OPTIMIZE-ATTRIBUTE-get_value-UPDATED   = 0o0001;
+constant    OPTIMIZE-ATTRIBUTE-get_value-PROFILING = 0o0002;
+constant    OPTIMIZE-ATTRIBUTE-get_value-PROFILED  = 0o0004;
 
-multi trait_mod:<is> (Attribute:D \a, :$conditional-initialization-attribute!) {
-    my $mname   = a.name.substr(2);
-    my &method  = my method (Str $s?) {
-        if $s {
-            a.set_value(self, $s);
-            return $s;
+submethod TWEAK {
+    $!active = 0;
+    if $!optimize {
+        if $!optimizations-path.IO.e {
+            note .exception.message without $!optimizations-path.IO.unlink;
         }
-        return a.get_value(self) unless $OPTIMIZATIONS & (OPTIMIZE-ATTRIBUTE-get_value-PROFILING +| OPTIMIZE-ATTRIBUTE-get_value-PROFILED);
-        if $OPTIMIZATIONS +& OPTIMIZE-ATTRIBUTE-get_value-PROFILED {
-            unless %OPTIMIZATION<ATTRIBUTE><get_value>{self.^name}{a.name.substr(2)}:exists {
-                $OPTIMIZATION-PATH.IO.unlink;
-                die 'Optimization map is stale (deleted...) -- restart and optionally re-optimize. Exiting...';
+#   Optimization: *
+#   ...
+#   Optimization: Attribute get_value actual usage
+        $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
+        $!active +|= OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
+    }
+    else {
+        if self!retrieve-optimizations {
+#   Optimization: *
+#   ...
+#   Optimization: Attribute get_value actual usage
+            if %!map<ATTRIBUTE><get_value>.elems {
+                $!active +|= OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
+                $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
+            }
+            else {
+                if $!optimizations-path.IO.e {
+                    note .exception.message without $!optimizations-path.IO.unlink;
+                }
+                $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
+                $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
             }
         }
-        elsif $OPTIMIZATIONS +& OPTIMIZE-ATTRIBUTE-get_value-PROFILING {
-            %OPTIMIZATION<ATTRIBUTE><get_value>{self.^name}{a.name.substr(2)} = 1;
-            $OPTIMIZATIONS +|= OPTIMIZE-ATTRIBUTE-get_value-UPDATED;
+        else {
+#   Optimization: *
+#   ...
+#   Optimization: Attribute get_value actual usage
+            $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
+            $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
         }
-        return a.get_value(self);
     }
-    &method.set_name($mname);
-    a.package.^add_method($mname, &method);
 }
 
-sub conditional-initialization-attribute-active (Str:D $package!, Str:D $name!) is export {
-#   (1) no optimization -- return fastest
-    return True unless $OPTIMIZATIONS +& OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
-#   (2) been profiled, return False as soon as possible
-    return False unless %OPTIMIZATION<ATTRIBUTE><get_value>{$package}{$name}:exists;
-#   (3) been profiled, and it's an active attribute
-    return True;
+method attribute-get_value-profiled () {
+    return True if $!active +& OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
+    return False;
+}
+
+method attribute-get_value-profiling () {
+    return True if $!active +& OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
+    return False;
+}
+
+method !retrieve-optimizations () {
+    if $!optimizations-path.IO.f && ! $!optimizations-path.IO.z {
+        given $!optimizations-path.IO.open {
+            .lock: :shared;
+            %!map = from-json(.slurp);
+            .close;
+        }
+    }
+    %!map.elems;
+}
+
+method stash-optimizations () {
+    if $!optimize && %!map.elems {
+        given $!optimizations-path.IO.open(:w) {
+            .lock;
+            .spurt: to-json(%!map);
+            .close;
+        }
+    }
 }
 
 =finish

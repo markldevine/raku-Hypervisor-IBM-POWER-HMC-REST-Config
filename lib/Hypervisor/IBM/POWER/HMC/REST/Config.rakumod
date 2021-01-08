@@ -1,8 +1,8 @@
 use     File::Directory::Tree;
 need    Hypervisor::IBM::POWER::HMC::REST::Config::Analysis;
 use     Hypervisor::IBM::POWER::HMC::REST::Config::END;
-need    Hypervisor::IBM::POWER::HMC::REST::Config::Optimization;
-use     Hypervisor::IBM::POWER::HMC::REST::Config::Optimizations;
+#%%%need    Hypervisor::IBM::POWER::HMC::REST::Config::Optimization;
+need    Hypervisor::IBM::POWER::HMC::REST::Config::Optimizations;
 need    Hypervisor::IBM::POWER::HMC::REST::Config::Options;
 need    Hypervisor::IBM::POWER::HMC::REST::Logon::X-API-Session;
 need    Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::DUMP;
@@ -14,39 +14,39 @@ use     POSIX::getaddrinfo :Get-Addr-Info-IPV4-STREAM-IPAddrs;
 use     Term::Choose :choose, :choose-multi;
 use     URI::Escape;
 unit    class Hypervisor::IBM::POWER::HMC::REST::Config:api<1>:auth<Mark Devine (mark@markdevine.com)>
-            does Hypervisor::IBM::POWER::HMC::REST::Config::Analysis
-            does Hypervisor::IBM::POWER::HMC::REST::Config::Optimization;
+            does Hypervisor::IBM::POWER::HMC::REST::Config::Analysis;
+#%%%        does Hypervisor::IBM::POWER::HMC::REST::Config::Optimization;
 
-has     Hypervisor::IBM::POWER::HMC::REST::Config::Options          $.options is required;
-has     Str                                                         $!root-directory;
+has     Bool                                                        $!cache;
 has     Str                                                         $!cache-directory;
 has     Str                                                         $!consumers-directory;
 has     Str                                                         $!consumer-active-directory;
 has     Str                                                         $!consumer-missing-directory;
 has     Str                                                         $!credentials-directory;
-#as     Str                                                         $!optimizations-path;
-has     Str                                                         $!diagnostics-path;
-has     Str                                                         $!hmcs-path;
-has     Str                                                         $!formats-path;
-has     Str                                                         $!maintenance-path;
-has     Str                                                         $!messaging-path;
-has     Str                                                         $.pid-path;
 has     Int                                                         %!diagnostics;
+has     Str                                                         $!diagnostics-path;
 has                                                                 %!formats;
-has                                                                 %!messaging;
-has     Hash                                                        %!hmcs;
-has                                                                 %!optimizations;
-has     Str                                                         $!hmc-candidate;
-has     Str                                                         $!user-id-candidate;
-has     Bool                                                        $!cache;
+has     Str                                                         $!formats-path;
 has     Str                                                         $!hmc;
-has     Str                                                         $!user-id;
-has     Bool                                                        $.optimize;
+has     Str                                                         $!hmc-candidate;
+has     Hash                                                        %!hmcs;
+has     Str                                                         $!hmcs-path;
+has     Str                                                         $!maintenance-path;
+has                                                                 %!messaging;
+has     Str                                                         $!messaging-path;
 has     Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::DUMP  $.dump;
 has     Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::DIAG  $.diag;
 has     Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::INFO  $.info;
 has     Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::NOTE  $.note;
+has     Hypervisor::IBM::POWER::HMC::REST::Config::Options          $.options is required;
+has     Hypervisor::IBM::POWER::HMC::REST::Config::Optimizations    $.optimizations;
+has     Str                                                         $!optimizations-path;
+has     Bool                                                        $.optimize;
+has     Str                                                         $.pid-path;
+has     Str                                                         $!root-directory;
 has     Hypervisor::IBM::POWER::HMC::REST::Logon::X-API-Session     $.session-manager;
+has     Str                                                         $!user-id;
+has     Str                                                         $!user-id-candidate;
 
 constant SUBDIRNAME     = '.hiph';
 constant DIAGNOSTICS    = set < 
@@ -130,54 +130,7 @@ method !resolve-cache () {
 }
 
 method !resolve-optimizations () {
-
-#   if %profile<$PROGRAM-NAME.IO.absolute><m> < $PROGRAM-NAME.IO.modified, drop profile map & carp
-#   if $PROGRAM-NAME.IO.modified > %!profile.modified, drop profile map and carp
-
-    if self.options.optimize {
-        $OPTIMIZATION-PATH.IO.unlink if $OPTIMIZATION-PATH.IO.e;
-        $OPTIMIZATIONS +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
-        $OPTIMIZATIONS +|= OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
-    }
-    else {
-        if self!retrieve-optimizations {                                                        # %OPTIMIZATION = from-json(slurp($OPTIMIZATION-PATH));
-            if %OPTIMIZATION<ATTRIBUTE><get_value>.elems {
-                $OPTIMIZATIONS +|= OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
-                $OPTIMIZATIONS +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
-            }
-            else {
-                $OPTIMIZATION-PATH.IO.unlink;
-                $OPTIMIZATIONS +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
-                $OPTIMIZATIONS +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
-            }
-        }
-        else {
-            $OPTIMIZATIONS +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
-            $OPTIMIZATIONS +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
-        }
-    }
-
-}
-
-method !retrieve-optimizations () {
-    if $!optimizations-path.IO.f && ! $!optimizations-path.IO.z {
-        given $!optimizations-path.IO.open {
-            .lock: :shared;
-            %!optimizations = from-json(.slurp);                                                # ...::Config::Optimizations.new(:attribute-get_value(from-json(.slurp)))
-            .close;
-        }
-    }
-}
-
-method !stash-optimizations () {
-#%%% Add check if PROFILING to determine if it is necessary to stash a new optimizations
-#   if $!optimized??? {
-        given $!optimizations-path.IO.open(:w) {
-            .lock;
-            .spurt: to-json(%!optimizations);
-            .close;
-        }
-#   }
+    $!optimizations = Hypervisor::IBM::POWER::HMC::REST::Config::Optimizations.new(:$!optimizations-path);
 }
 
 method !resolve-formats () {
@@ -224,7 +177,10 @@ method !resolve-diagnostics () {
     if self.options.diags {
         note .exception.message without $!diagnostics-path.IO.unlink;
         %!diagnostics = ();
-        if my @user-input = choose-multi(DIAGNOSTICS.keys.sort, :info(" ←↑→↓ to navigate\n ␣ to select\n ↵ when complete\n 'q' to quit\n"), :2layout, :prompt('␣ spacebar to select options')) {
+        if my @user-input = choose-multi(
+          DIAGNOSTICS.keys.sort,
+          :info(" ←↑→↓ to navigate\n ␣ to select\n ↵ when complete\n 'q' to quit\n"),
+          :2layout, :prompt('␣ spacebar to select options')) {
             for @user-input -> $list {
                 for $list.list -> $d {
                     %!diagnostics{$d} = 1;
@@ -472,8 +428,7 @@ ENDOFRECOMMENDATION
         }
     }
     $!root-directory       ~= '/' ~ $middle-path;
-#   $!optimizations-path         = $!root-directory ~ '/' ~ 'optimizations.json';
-    $!maintenance-path      = $!root-directory ~ '/' ~ '.maintenance';
+    $!maintenance-path      = $!root-directory ~ '/' ~ '.maintenance';                  #%%%
     $!cache-directory       = $!root-directory ~ '/' ~ '.cache';
     unless $!cache-directory.IO.d {
         die 'mkdir ' ~ $!cache-directory ~ ' failed!' unless mkdir $!cache-directory;
@@ -481,7 +436,6 @@ ENDOFRECOMMENDATION
     if $private-dir {
         if $!cache-directory.IO.mode != 0o700 {
             die 'chmod 0o700 ' ~ $!cache-directory ~ ' failed!' unless $!cache-directory.IO.chmod('0o700');
-        }
     }
     else {
         if $!cache-directory.IO.mode != 0o2770 {

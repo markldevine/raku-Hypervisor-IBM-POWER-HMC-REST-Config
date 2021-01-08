@@ -1,14 +1,7 @@
 use         JSON::Fast;
 unit        role Hypervisor::IBM::POWER::HMC::REST::Config::Optimize:api<1>:auth<Mark Devine (mark@markdevine.com)>;
 
-our         %OPTIMIZATION;
-            %OPTIMIZATION<ATTRIBUTE><get_value>    = {};
-our         $OPTIMIZATION-PATH                     = $*HOME ~ '/dev/' ~ 'OPTIMIZATIONS.json';
-our         $OPTIMIZATIONS                         = 0;
-
-constant    OPTIMIZE-ATTRIBUTE-get_value-UPDATED   = 0o0001;
-constant    OPTIMIZE-ATTRIBUTE-get_value-PROFILING = 0o0002;
-constant    OPTIMIZE-ATTRIBUTE-get_value-PROFILED  = 0o0004;
+has Bool    $.auto-load = True;
 
 multi trait_mod:<is> (Attribute:D \a, :$conditional-initialization-attribute!) {
     my $mname   = a.name.substr(2);
@@ -34,13 +27,23 @@ multi trait_mod:<is> (Attribute:D \a, :$conditional-initialization-attribute!) {
     a.package.^add_method($mname, &method);
 }
 
-sub conditional-initialization-attribute-active (Str:D $package!, Str:D $name!) is export {
-#   (1) no optimization -- return fastest
+method conditional-initialization-attribute-active (Str:D $package!, Str:D $name!) is export {
     return True unless $OPTIMIZATIONS +& OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
-#   (2) been profiled, return False as soon as possible
     return False unless %OPTIMIZATION<ATTRIBUTE><get_value>{$package}{$name}:exists;
-#   (3) been profiled, and it's an active attribute
     return True;
+}
+
+
+method optimization-init-load {
+    self.diag.post: self.^name ~ '::' ~ &?ROUTINE.name if %*ENV<HIPH_METHOD>;
+#
+#   decide if .init() should proceed to .load()
+#
+    return self.auto-load;
+}
+
+method set-init-load (Bool:D $auto-load) {
+    $!auto-load = $auto-load;
 }
 
 =finish
