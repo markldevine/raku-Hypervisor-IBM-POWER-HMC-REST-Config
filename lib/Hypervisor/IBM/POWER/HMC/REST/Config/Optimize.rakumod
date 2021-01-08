@@ -26,8 +26,8 @@ multi trait_mod:<is> (Attribute:D \a, :$conditional-initialization-attribute!) {
 }
 
 method conditional-initialization-attribute-active (Str:D $package!, Str:D $name!) is export {
-    return True unless self.config.optimizations.attribute-get_value-profiled
-    return False unless self.config.optimizations.attribute-get_value-is-accessed(:$package, :$attribute);
+    return True unless self.config.optimizations.attribute-get_value-profiled;
+    return False unless self.config.optimizations.attribute-get_value-is-accessed(:$package, :attribute($name));
     return True;
 }
 
