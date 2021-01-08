@@ -24,6 +24,7 @@
         "Hypervisor::IBM::POWER::HMC::REST::Config::Dump": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Dump.rakumod",
         "Hypervisor::IBM::POWER::HMC::REST::Config::Optimizations": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Optimizations.rakumod",
         "Hypervisor::IBM::POWER::HMC::REST::Config::Optimize": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Optimize.rakumod",
+        "Hypervisor::IBM::POWER::HMC::REST::Config::Traits": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Traits.rakumod",
         "Hypervisor::IBM::POWER::HMC::REST::Config::Options": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Options.rakumod",
         "Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::DIAG": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Messaging/DIAG.rakumod",
         "Hypervisor::IBM::POWER::HMC::REST::Config::Messaging::DUMP": "lib/Hypervisor/IBM/POWER/HMC/REST/Config/Messaging/DUMP.rakumod",
