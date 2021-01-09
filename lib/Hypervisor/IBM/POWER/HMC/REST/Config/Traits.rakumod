@@ -3,11 +3,11 @@ unit module Hypervisor::IBM::POWER::HMC::REST::Config::Traits:api<1>:auth<Mark D
 multi trait_mod:<is> (Attribute:D \a, :$conditional-initialization-attribute!) is export {
     my $mname   = a.name.substr(2);
     my &method  = my method (Str $s?) {
-note $mname;
         if $s {
             a.set_value(self, $s);
             return $s;
         }
+note $mname ~ ' get_value request...';
         my Bool \is-accessed = self.config.optimizations.attribute-get_value-is-accessed(:package(self.^name), :attribute(a.name.substr(2)));
         if self.config.optimizations.attribute-get_value-profiled {
             unless is-accessed {

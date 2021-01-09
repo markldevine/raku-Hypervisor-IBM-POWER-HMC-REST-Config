@@ -32,31 +32,37 @@ method dump-tree (Int:D :$column!, Int:D :$depth! is copy, Int:D :$shift = 0) {
         my $name    = $attr.name.substr(2);
         given $attr.type {
             when Str {  
-                my $v = $attr.get_value(self);
+#%%%            my $v = $attr.get_value(self);
+                my $v = self."$name"();
                 if $v {
                     self.config.dump.post: $v, :header($name), :$column, :$shift;
                 }
             }
             when URI {
-                my $v = $attr.get_value(self);
+#%%%            my $v = $attr.get_value(self);
+                my $v = self."$name"();
                 if $v {
                     self.config.dump.post: $v.Str, :header($name), :$column, :$shift;
                 }
             }
             when DateTime {
-                my $v = $attr.get_value(self);
+#%%%            my $v = $attr.get_value(self);
+                my $v = self."$name"();
                 if $v {
                     self.config.dump.post: $v.Str, :header($name), :$column, :$shift;
                 }
             }
             when Positional[Str]  {
-                self.config.dump.post: $attr.get_value(self), :header($name), :$column, :$shift;
+#%%%            self.config.dump.post: $attr.get_value(self), :header($name), :$column, :$shift;
+                self.config.dump.post: self."$name"(), :header($name), :$column, :$shift;
             }
             when Positional[URI]  {
-                self.config.dump.post: $attr.get_value(self), :header($name), :$column, :$shift;
+#%%%            self.config.dump.post: $attr.get_value(self), :header($name), :$column, :$shift;
+                self.config.dump.post: self."$name"(), :header($name), :$column, :$shift;
             }
             when Positional {
-                my @objs = $attr.get_value(self);
+#%%%            my @objs = $attr.get_value(self);
+                my @objs = self."$name"();
                 for @objs -> $obj {
                     if $depth >= 1 {
                         if $obj.DEFINITE && $obj.can('dump-tree') {
@@ -67,7 +73,8 @@ method dump-tree (Int:D :$column!, Int:D :$depth! is copy, Int:D :$shift = 0) {
                 }
             }
             when Associative {
-                my %objs = $attr.get_value(self);
+#%%%            my %objs = $attr.get_value(self);
+                my %objs = self."$name"();
                 given %objs.values.first.WHAT {
                     when Str {
                         self.config.dump.post: :banner($name), :$column, :$shift;
@@ -91,7 +98,8 @@ method dump-tree (Int:D :$column!, Int:D :$depth! is copy, Int:D :$shift = 0) {
             }
             when .^name ~~ / ^ 'Hypervisor::IBM::POWER::HMC::REST::' / {
                 if $depth >= 1 {
-                    my $obj = $attr.get_value(self);
+#%%%                my $obj = $attr.get_value(self);
+                    my $obj = self."$name"();
                     if $obj.DEFINITE && $obj.can('dump-tree') {
                         self.config.dump.post: :banner($name), :$column, :$shift;
                         $obj.dump-tree(:$column, :depth($depth - 1), :shift($shift + 1));
