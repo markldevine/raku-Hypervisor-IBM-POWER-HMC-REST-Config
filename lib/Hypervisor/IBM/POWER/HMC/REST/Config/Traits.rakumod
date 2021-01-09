@@ -3,13 +3,14 @@ unit module Hypervisor::IBM::POWER::HMC::REST::Config::Traits:api<1>:auth<Mark D
 multi trait_mod:<is> (Attribute:D \a, :$conditional-initialization-attribute!) is export {
     my $mname   = a.name.substr(2);
     my &method  = my method (Str $s?) {
-note 'Here';
+note $mname;
         if $s {
             a.set_value(self, $s);
             return $s;
         }
+        my Bool \is-accessed = self.config.optimizations.attribute-get_value-is-accessed(:package(self.^name), :attribute(a.name.substr(2)));
         if self.config.optimizations.attribute-get_value-profiled {
-            unless self.config.optimizations.attribute-get_value-is-accessed(:package(self.^name), :attribute(a.name.substr(2))) {
+            unless is-accessed {
                 self.config.optimizations.flush;
                 die 'The optimization map is stale and has been deleted. Restart and optionally re-optimize. Exiting...';
             }

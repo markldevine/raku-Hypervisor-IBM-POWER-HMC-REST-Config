@@ -11,9 +11,7 @@ constant    OPTIMIZE-ATTRIBUTE-get_value-PROFILING = 0o0002;
 constant    OPTIMIZE-ATTRIBUTE-get_value-PROFILED  = 0o0004;
 
 submethod TWEAK {
-    $!active = 0;
-
-note '$!optimize = ' ~ $!optimize;
+    $!active = 0;                                                                   note '$!optimize = ' ~ $!optimize;
 
     if $!optimize {
         if $!optimizations-path.IO.e {
@@ -23,8 +21,7 @@ note '$!optimize = ' ~ $!optimize;
 #   ...
 #   Optimization: Attribute get_value actual usage
         $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
-        $!active +|= OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
-note '$!active = ' ~ $!active;
+        $!active +|= OPTIMIZE-ATTRIBUTE-get_value-PROFILING;                        note '$!active = ' ~ $!active;
     }
     else {
         if self!retrieve {
@@ -33,16 +30,14 @@ note '$!active = ' ~ $!active;
 #   Optimization: Attribute get_value actual usage
             if %!map<ATTRIBUTE><get_value>.elems {
                 $!active +|= OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
-                $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
-note '$!active = ' ~ $!active;
+                $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILING;              note '$!active = ' ~ $!active;
             }
             else {
                 if $!optimizations-path.IO.e {
                     note .exception.message without $!optimizations-path.IO.unlink;
                 }
                 $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
-                $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
-note '$!active = ' ~ $!active;
+                $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILING;              note '$!active = ' ~ $!active;
             }
         }
         else {
@@ -50,28 +45,34 @@ note '$!active = ' ~ $!active;
 #   ...
 #   Optimization: Attribute get_value actual usage
             $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
-            $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
-note '$!active = ' ~ $!active;
+            $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILING;                  note '$!active = ' ~ $!active;
         }
     }
 }
 
-method attribute-get_value-set-as-accessed (Str:D :$package, Str:D :$attribute) {   note 'attribute-get_value-set-as-accessed';
-    %!map<ATTRIBUTE><get_value>{$package}{$attribute} = 1;
-    $!active +|= OPTIMIZE-ATTRIBUTE-get_value-UPDATED;
+method attribute-get_value-set-as-accessed (Str:D :$package, Str:D :$attribute) {   note 'attribute-get_value-set-as-accessed ' ~ $package ~ ' ' ~ $attribute;
+    unless %!map<ATTRIBUTE><get_value>{$package}{$attribute}:exists {
+        %!map<ATTRIBUTE><get_value>{$package}{$attribute} = 1;
+        $!active +|= OPTIMIZE-ATTRIBUTE-get_value-UPDATED;
+    }
 }
 
-method attribute-get_value-is-accessed (Str:D :$package, Str:D :$attribute) {       note 'attribute-get_value-is-accessed';
+method attribute-package-is-accessed (Str:D :$package) {                            note 'attribute-package-is-accessed ' ~ $package;
+    return True if %!map<ATTRIBUTE><get_value>{$package}:exists;
+    return False;
+}
+
+method attribute-get_value-is-accessed (Str:D :$package, Str:D :$attribute) {       note 'attribute-get_value-is-accessed ' ~ $package ~ ' ' ~ $attribute;
     return True if %!map<ATTRIBUTE><get_value>{$package}{$attribute}:exists;
     return False;
 }
 
-method attribute-get_value-profiled () {                                            note 'attribute-get_value-profiled';
+method attribute-get_value-profiled () {
     return True if $!active +& OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
     return False;
 }
 
-method attribute-get_value-profiling () {                                           note 'attribute-get_value-profiling';
+method attribute-get_value-profiling () {
     return True if $!active +& OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
     return False;
 }
