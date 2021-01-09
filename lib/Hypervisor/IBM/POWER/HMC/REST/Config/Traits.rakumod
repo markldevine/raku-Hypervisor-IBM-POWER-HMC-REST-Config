@@ -3,6 +3,7 @@ unit module Hypervisor::IBM::POWER::HMC::REST::Config::Traits:api<1>:auth<Mark D
 multi trait_mod:<is> (Attribute:D \a, :$conditional-initialization-attribute!) is export {
     my $mname   = a.name.substr(2);
     my &method  = my method (Str $s?) {
+note 'Here';
         if $s {
             a.set_value(self, $s);
             return $s;

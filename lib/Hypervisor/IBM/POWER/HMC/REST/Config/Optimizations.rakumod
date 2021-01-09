@@ -12,6 +12,9 @@ constant    OPTIMIZE-ATTRIBUTE-get_value-PROFILED  = 0o0004;
 
 submethod TWEAK {
     $!active = 0;
+
+note '$!optimize = ' ~ $!optimize;
+
     if $!optimize {
         if $!optimizations-path.IO.e {
             note .exception.message without $!optimizations-path.IO.unlink;
@@ -49,22 +52,22 @@ submethod TWEAK {
     }
 }
 
-method attribute-get_value-set-as-accessed (Str:D :$package, Str:D :$attribute) {
+method attribute-get_value-set-as-accessed (Str:D :$package, Str:D :$attribute) {   note 'attribute-get_value-set-as-accessed';
     %!map<ATTRIBUTE><get_value>{$package}{$attribute} = 1;
     $!active +|= OPTIMIZE-ATTRIBUTE-get_value-UPDATED;
 }
 
-method attribute-get_value-is-accessed (Str:D :$package, Str:D :$attribute) {
+method attribute-get_value-is-accessed (Str:D :$package, Str:D :$attribute) {       note 'attribute-get_value-is-accessed';
     return True if %!map<ATTRIBUTE><get_value>{$package}{$attribute}:exists;
     return False;
 }
 
-method attribute-get_value-profiled () {
+method attribute-get_value-profiled () {                                            note 'attribute-get_value-profiled';
     return True if $!active +& OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
     return False;
 }
 
-method attribute-get_value-profiling () {
+method attribute-get_value-profiling () {                                           note 'attribute-get_value-profiling';
     return True if $!active +& OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
     return False;
 }
@@ -81,6 +84,8 @@ method !retrieve () {
 }
 
 method stash () {
+note "\n\n STASH \n\n";
+dd %!map;
     if $!optimize && %!map.elems {
         given $!optimizations-path.IO.open(:w) {
             .lock;

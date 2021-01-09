@@ -127,7 +127,9 @@ method !resolve-cache () {
 }
 
 method !resolve-optimizations () {
-    $!optimizations = Hypervisor::IBM::POWER::HMC::REST::Config::Optimizations.new(:$!optimizations-path);
+    $!optimize      = False;
+    $!optimize      = True if self.options.optimize;
+    $!optimizations = Hypervisor::IBM::POWER::HMC::REST::Config::Optimizations.new(:$!optimize, :$!optimizations-path);
 }
 
 method !resolve-formats () {
