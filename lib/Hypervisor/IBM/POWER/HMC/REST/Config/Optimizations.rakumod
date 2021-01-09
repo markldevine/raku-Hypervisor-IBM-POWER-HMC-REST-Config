@@ -24,6 +24,7 @@ note '$!optimize = ' ~ $!optimize;
 #   Optimization: Attribute get_value actual usage
         $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
         $!active +|= OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
+note '$!active = ' ~ $!active;
     }
     else {
         if self!retrieve {
@@ -33,6 +34,7 @@ note '$!optimize = ' ~ $!optimize;
             if %!map<ATTRIBUTE><get_value>.elems {
                 $!active +|= OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
                 $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
+note '$!active = ' ~ $!active;
             }
             else {
                 if $!optimizations-path.IO.e {
@@ -40,6 +42,7 @@ note '$!optimize = ' ~ $!optimize;
                 }
                 $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
                 $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
+note '$!active = ' ~ $!active;
             }
         }
         else {
@@ -48,6 +51,7 @@ note '$!optimize = ' ~ $!optimize;
 #   Optimization: Attribute get_value actual usage
             $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILED;
             $!active +&= +^OPTIMIZE-ATTRIBUTE-get_value-PROFILING;
+note '$!active = ' ~ $!active;
         }
     }
 }
