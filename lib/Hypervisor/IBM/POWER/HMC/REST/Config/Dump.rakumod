@@ -20,7 +20,7 @@ method dump (Int :$column is copy, Int:D :$depth is copy = 0, Int :$shift = 0) {
     }
     $depth++                        if $default-depth;  # recalibrate now that the column is right for the depth tests below
     self.init                       unless self.initialized;
-    self.load                       unless self.loaded;
+#   self.load                       unless self.loaded;
     self.dump-tree(:$column, :$depth, :$shift);
 }
 

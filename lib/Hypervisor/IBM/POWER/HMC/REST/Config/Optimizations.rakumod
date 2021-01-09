@@ -50,19 +50,19 @@ submethod TWEAK {
     }
 }
 
-method attribute-get_value-set-as-accessed (Str:D :$package, Str:D :$attribute) {   note 'attribute-get_value-set-as-accessed ' ~ $package ~ ' ' ~ $attribute;
+method attribute-get_value-set-as-accessed (Str:D :$package, Str:D :$attribute) {   # note 'attribute-get_value-set-as-accessed ' ~ $package ~ ' ' ~ $attribute;
     unless %!map<ATTRIBUTE><get_value>{$package}{$attribute}:exists {
         %!map<ATTRIBUTE><get_value>{$package}{$attribute} = 1;
         $!active +|= OPTIMIZE-ATTRIBUTE-get_value-UPDATED;
     }
 }
 
-method attribute-package-is-accessed (Str:D :$package) {                            note 'attribute-package-is-accessed ' ~ $package;
+method attribute-package-is-accessed (Str:D :$package) {                            # note 'attribute-package-is-accessed ' ~ $package;
     return True if %!map<ATTRIBUTE><get_value>{$package}:exists;
     return False;
 }
 
-method attribute-get_value-is-accessed (Str:D :$package, Str:D :$attribute) {       note 'attribute-get_value-is-accessed ' ~ $package ~ ' ' ~ $attribute;
+method attribute-get_value-is-accessed (Str:D :$package, Str:D :$attribute) {       # note 'attribute-get_value-is-accessed ' ~ $package ~ ' ' ~ $attribute;
     return True if %!map<ATTRIBUTE><get_value>{$package}{$attribute}:exists;
     return False;
 }

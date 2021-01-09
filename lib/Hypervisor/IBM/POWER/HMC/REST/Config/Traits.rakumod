@@ -7,10 +7,9 @@ multi trait_mod:<is> (Attribute:D \a, :$conditional-initialization-attribute!) i
             a.set_value(self, $s);
             return $s;
         }
-note $mname ~ ' get_value request...';
-        my Bool \is-accessed = self.config.optimizations.attribute-get_value-is-accessed(:package(self.^name), :attribute(a.name.substr(2)));
+#note $mname ~ ' get_value request...';
         if self.config.optimizations.attribute-get_value-profiled {
-            unless is-accessed {
+            unless self.config.optimizations.attribute-get_value-is-accessed(:package(self.^name), :attribute(a.name.substr(2))) {
                 self.config.optimizations.flush;
                 die 'The optimization map is stale and has been deleted. Restart and optionally re-optimize. Exiting...';
             }
