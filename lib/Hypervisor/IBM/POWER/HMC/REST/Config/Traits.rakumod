@@ -7,7 +7,6 @@ multi trait_mod:<is> (Attribute:D \a, :$conditional-initialization-attribute!) i
             a.set_value(self, $s);
             return $s;
         }
-#note $mname ~ ' get_value request...';
         if self.config.optimizations.attribute-get_value-profiled {
             unless self.config.optimizations.attribute-get_value-is-accessed(:package(self.^name), :attribute(a.name.substr(2))) {
                 self.config.optimizations.flush;
