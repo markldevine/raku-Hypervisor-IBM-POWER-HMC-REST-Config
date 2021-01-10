@@ -80,6 +80,7 @@ method !retrieve () {
 
 method stash () {
     if $!optimize && %!map.elems {
+note "\n\nSTASH\n\n";
         given $!optimizations-path.IO.open(:w) {
             .lock;
             .spurt: to-json(%!map);
