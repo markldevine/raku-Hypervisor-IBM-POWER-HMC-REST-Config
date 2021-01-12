@@ -9,6 +9,7 @@ subset  UserId  where * ~~ / ^ <alpha> <alnum>+ $ /;
 has     Bool    $.help                  = False;
 has     Bool    $.explain               = False;
 has     HMC     $.hmc;
+has     Bool    $.no-pid                = False;
 has     Bool    $.off-line              = False;
 has     Str     $.root-directory;
 has     Bool    $.unconfig;
@@ -268,6 +269,7 @@ our sub usage {
     put ' ' x 2 ~ $*PROGRAM-NAME.IO.basename ~ ' [--switches...] [--help] [--explain]';
     put '';
     put ' ' x 4 ~ '[--hmc=' ~ colored('hostname', 'green italic') ~ ']        resolvable HMC hostname';
+    put ' ' x 4 ~ '[--no-pid' ~ colored('False', 'bold') ~ '|' ~ colored('True', 'italic') ~ '] do not maintain a run PID';
     put ' ' x 4 ~ '[--off-line=' ~ colored('False', 'bold') ~ '|' ~ colored('True', 'italic') ~ '] no network connection to the HMC (' ~ colored('implies --cache', 'italic') ~ ')';
 #   put ' ' x 4 ~ '[--root-directory=' ~ colored('dir', 'italic') ~ "]  defaults to user's home directory (" ~ colored('rarely altered', 'red italic') ~ ')';
     put ' ' x 4 ~ '[--unconfig=' ~ colored('False', 'bold') ~ '|' ~ colored('True', 'italic') ~ '] erase the configuration file and start with defaults';
