@@ -95,6 +95,7 @@ submethod TWEAK {
 }
 
 method !resolve-pid () {
+    return if self.options.no-pid;
     if $!pid-path.IO.f {
         my $pid;
         given $!pid-path.IO.open(:r) {
